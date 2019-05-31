@@ -1,6 +1,6 @@
 from flask import Flask, render_template
 import urllib.request
-from datetime import datetime
+from datetime import datetime, timezone
 import pandas as pd
 from flask_mail import Mail, Message
 import matplotlib.pyplot as plt
@@ -29,7 +29,8 @@ def index():
     threading.Timer(300.0, index).start()
     
     # create a df from the data imported from the url
-    url='ftp://ftp.swpc.noaa.gov/pub/lists/particle/'+datetime.today().strftime('%Y%m%d')+'_Gp_part_5m.txt'
+    
+    url='ftp://ftp.swpc.noaa.gov/pub/lists/particle/'+datetime.now(timezone.utc).strftime('%Y%m%d')+'_Gp_part_5m.txt'
     df=pd.read_csv(url, skiprows=26,  sep="\s+", engine='python', names=['YR', 'MO', 'DA',  'HHMM', 'Modified Julian Day', 'Seconds of the Day', 'P > 1', 'P > 5', 'P >10', 'P >30', 'P >50', 'P>100', 'E>0.8', 'E>2.0', 'E>4.0'])
     
     #plot a graph for >10MeV levels according to the time(HHMM)
